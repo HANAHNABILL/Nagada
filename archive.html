@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collections — NAGADA Heritage Textiles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cinzel:wght@400;500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --gold:         #C9A84C;
+  --gold-light:   #E2C97E;
+  --gold-pale:    #F0DFA0;
+  --crimson-deep: #1A0408;
+  --crimson-dark: #2A0609;
+  --crimson-mid:  #3D0B10;
+  --text-cream:   #F4EDD6;
+  --text-muted:   #9C8870;
+  --text-dim:     #6B5A48;
+}
+
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body {
+  background: #310002;
+  color: var(--text-cream);
+  font-family: 'Noto Serif', serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ════════ CUSTOM CURSOR ════════ */
+#cursor-dot {
+  position: fixed;
+  width: 8px; height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease, background 0.3s ease, width 0.3s ease, height 0.3s ease;
+  mix-blend-mode: screen;
+}
+#cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(201,168,76,0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s cubic-bezier(0.25,1,0.5,1),
+              height 0.4s cubic-bezier(0.25,1,0.5,1),
+              border-color 0.4s ease,
+              opacity 0.3s ease;
+}
+body.cursor-hover #cursor-dot { width: 12px; height: 12px; background: var(--gold-light); }
+body.cursor-hover #cursor-ring { width: 56px; height: 56px; border-color: rgba(201,168,76,0.9); }
+body.cursor-click #cursor-dot  { width: 5px; height: 5px; }
+body.cursor-click #cursor-ring { width: 22px; height: 22px; }
+
+/* ════════ PAGE VEIL ════════ */
+#page-veil {
+  position: fixed; inset: 0; z-index: 9000;
+  background: #0d0002;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  transition: opacity 0.9s ease 0.4s, visibility 0.9s ease 0.4s;
+}
+#page-veil.gone { opacity: 0; visibility: hidden; }
+.veil-logo {
+  font-family: 'Cinzel', serif;
+  font-size: 13px; letter-spacing: 0.45em;
+  color: var(--gold); text-transform: uppercase;
+  opacity: 0; animation: veilIn 0.7s ease 0.1s forwards;
+}
+@keyframes veilIn { to { opacity: 1; } }
+
+/* ════════ MARQUEE TICKER ════════ */
+.marquee-wrap {
+  overflow: hidden;
+  background: var(--gold);
+  padding: 11px 0;
+  position: relative; z-index: 10;
+}
+.marquee-track {
+  display: flex; white-space: nowrap;
+  animation: marquee 28s linear infinite;
+}
+.marquee-track span {
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.32em;
+  text-transform: uppercase; color: var(--crimson-deep);
+  padding: 0 52px; flex-shrink: 0;
+}
+.marquee-track span::before { content: '✦'; margin-right: 52px; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ════════ NAV ════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: #310002;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  padding: 0 50px; height: 80px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+}
+.nav-logo img {
+  height: 35px; display: block;
+  opacity: 0; transform: translateY(-6px);
+  transition: opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s;
+}
+.nav-logo img.in { opacity: 1; transform: translateY(0); }
+.nav-center {
+  display: flex; gap: 36px; list-style: none;
+  position: absolute; left: 50%; transform: translateX(-50%);
+}
+.nav-center a {
+  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.18em;
+  text-transform: uppercase; text-decoration: none; color: var(--text-muted);
+  transition: color 0.3s; white-space: nowrap;
+  opacity: 0; transform: translateY(-6px); display: inline-block; position: relative;
+}
+.nav-center a::after {
+  content: ''; position: absolute; bottom: -3px; left: 0; right: 100%;
+  height: 1px; background: var(--gold); transition: right 0.35s ease;
+}
+.nav-center a:hover { color: var(--gold); }
+.nav-center a:hover::after { right: 0; }
+.nav-center a.in { opacity: 1; transform: translateY(0); transition: opacity 0.6s ease, transform 0.6s ease, color 0.3s; }
+/* Collections is active */
+.nav-center li:nth-child(3) a { color: var(--gold); border-bottom: 1px solid var(--gold); padding-bottom: 2px; }
+.nav-icons { display: flex; gap: 16px; align-items: center; }
+.nav-icons svg {
+  width: 18px; height: 18px; stroke: var(--text-muted); fill: none;
+  stroke-width: 1.5; cursor: none; transition: stroke 0.3s; opacity: 0;
+}
+.nav-icons svg:hover { stroke: var(--gold); }
+.nav-icons svg.in { opacity: 1; transition: opacity 0.6s ease 0.5s, stroke 0.3s; }
+
+/* ════════ MOBILE NAV ════════ */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 30px; height: 24px;
+  background: none; border: none; padding: 0;
+  cursor: pointer; z-index: 300;
+}
+.nav-hamburger span {
+  display: block; width: 100%; height: 1.5px;
+  background: var(--gold);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.mobile-menu {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: #1A0408;
+  z-index: 199;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 34px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translateY(-14px);
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+}
+.mobile-menu.open { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); }
+.mobile-menu a {
+  font-family: 'Cinzel', serif; font-size: 15px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--text-cream); text-decoration: none;
+  transition: color 0.3s;
+}
+.mobile-menu a:hover { color: var(--gold); }
+.mobile-menu-close {
+  position: absolute; top: 28px; right: 28px;
+  width: 30px; height: 30px; background: none; border: none; cursor: pointer;
+}
+.mobile-menu-close span {
+  position: absolute; top: 50%; left: 50%; width: 22px; height: 1.5px; background: var(--gold);
+}
+.mobile-menu-close span:nth-child(1) { transform: translate(-50%,-50%) rotate(45deg); }
+.mobile-menu-close span:nth-child(2) { transform: translate(-50%,-50%) rotate(-45deg); }
+
+/* Prevent background scroll when mobile menu open */
+body.menu-open { overflow: hidden; }
+
+
+/* ════════ HERO ════════ */
+.hero {
+  position: relative; height: 100vh; min-height: 640px; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 120px 0 0;
+}
+.hero-bg { position: absolute; inset: 0; z-index: 0; }
+.hero-bg img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center 30%; display: block;
+  transform: scale(1.06); opacity: 0;
+  transition: opacity 1.4s ease 0.1s, transform 7s ease 0.1s;
+  filter: grayscale(35%) brightness(0.68);
+}
+.hero-bg img.in { opacity: 1; transform: scale(1); }
+.hero-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to bottom,
+    rgba(18,2,5,0.25) 0%,
+    rgba(18,2,5,0.08) 22%,
+    rgba(18,2,5,0.50) 56%,
+    #310002 100%);
+}
+.hero-content {
+  position: relative; z-index: 2; text-align: center;
+  padding: 0 40px; max-width: 900px; margin: 0 auto; width: 100%;
+}
+.hero-subtitle-small {
+  font-family: 'Cinzel', serif; font-size: 9.5px; letter-spacing: 0.38em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 14px;
+  opacity: 0; transform: translateY(10px);
+  transition: opacity 0.8s ease 0.9s, transform 0.8s ease 0.9s;
+}
+.hero-subtitle-small.in { opacity: 1; transform: translateY(0); }
+.hero-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(54px, 9vw, 110px);
+  font-weight: 400; line-height: 1; letter-spacing: 0.04em;
+  color: var(--gold-light); margin-bottom: 14px;
+  overflow: hidden;
+}
+.hero-title span {
+  display: block; opacity: 0; transform: translateY(100%);
+  transition: opacity 0.9s ease 1.05s, transform 0.9s cubic-bezier(0.16,1,0.3,1) 1.05s;
+}
+.hero-title span.in { opacity: 1; transform: translateY(0); }
+.hero-desc {
+  font-family: 'Noto Serif', serif; font-size: clamp(13px, 1.3vw, 16px);
+  font-weight: 300; line-height: 1.7; color: rgba(244,237,214,0.60);
+  max-width: 520px; margin: 0 auto;
+  opacity: 0; transform: translateY(12px);
+  transition: opacity 0.8s ease 1.35s, transform 0.8s ease 1.35s;
+}
+.hero-desc.in { opacity: 1; transform: translateY(0); }
+
+/* Hero scroll indicator */
+.hero-scroll {
+  position: absolute; bottom: 34px; right: 48px; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  opacity: 0; transition: opacity 0.8s ease 1.7s;
+}
+.hero-scroll.in { opacity: 1; }
+.hero-scroll-label {
+  font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 0.32em;
+  color: var(--text-dim); text-transform: uppercase;
+  writing-mode: vertical-rl; text-orientation: mixed;
+}
+.hero-scroll-line {
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(1); }
+  50% { opacity: 1; transform: scaleY(1.2); transform-origin: top; }
+}
+
+/* ════════ ORNAMENT ════════ */
+.ornament-strip {
+  width: 100%; overflow: hidden; line-height: 0;
+  position: relative; z-index: 2;
+  margin: -44px 0 -44px;
+  opacity: 0; transition: opacity 1s ease;
+  background: transparent !important;
+}
+.ornament-strip.in { opacity: 1; }
+.ornament-strip img { width: 100%; display: block; background: transparent !important; }
+
+/* ════════ COLLECTION SECTION ════════ */
+.section-collection {
+  background: #310002;
+  padding: 100px 60px 90px;
+}
+.collection-header {
+  text-align: center; margin-bottom: 60px;
+}
+.collection-eyebrow {
+  font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.36em;
+  text-transform: uppercase; color: #E2C97E; margin-bottom: 12px;
+  opacity: 0; transition: opacity 0.7s ease;
+}
+.collection-eyebrow.in { opacity: 1; }
+.collection-heading {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 400; line-height: 1; letter-spacing: 0.05em;
+  color: #E2C97E; margin-bottom: 14px;
+  opacity: 0; transform: translateY(18px); font-weight: 550;
+  transition: opacity 0.8s ease 0.1s, transform 0.8s ease 0.1s;
+}
+.collection-heading.in { opacity: 1; transform: translateY(0); }
+.collection-desc {
+  font-family: 'Noto Serif', serif; font-size: clamp(13px, 1.5vw, 17px);
+  font-weight: 300; color: rgba(255, 255, 255, 0.65);
+  max-width: 380px; margin: 0 auto;
+  opacity: 0; transition: opacity 0.8s ease 0.25s;
+}
+.collection-desc.in { opacity: 1; }
+
+/* Product grid */
+.product-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 32px; align-items: start;
+}
+
+.product-card {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  cursor: none; background: #3D0506; padding: 16px 16px 60px;
+  border: 5px solid #3D0506;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+}
+.product-card:nth-child(1) { transition-delay: 0.05s; }
+.product-card:nth-child(2) { transition-delay: 0.18s; }
+.product-card:nth-child(3) { transition-delay: 0.31s; }
+.product-card.in { opacity: 1; transform: translateY(0); }
+
+.product-img-wrap {
+  position: relative; overflow: hidden; margin-bottom: 0;
+}
+.product-img {
+  width: 100%; aspect-ratio: 3/3.8; object-fit: cover; display: block;
+  filter: brightness(0.82) saturate(0.85);
+  transition: filter 0.5s ease, transform 0.7s cubic-bezier(0.25,1,0.5,1);
+}
+.product-card:hover .product-img { filter: brightness(1.4) saturate(1); transform: scale(1.03); }
+
+.product-body { padding: 18px 0 0; }
+.product-name-row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 8px;
+}
+.product-name {
+  font-family: 'Noto Serif', serif; font-size: 18px; font-weight: 400;
+  color: var(--text-cream); line-height: 1.2;
+}
+.product-price {
+  font-family: 'Manrope', serif; font-size: 15px; letter-spacing: 0.08em;
+  color: var(--gold); white-space: nowrap;
+}
+.product-desc {
+  font-family: 'Manrope', serif; font-size: 12.5px; line-height: 1.75;
+  color: var(--text-cream); font-weight: 300; margin-bottom: 14px;
+}
+.product-meta-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 12px; border-top: 1px solid rgba(201,168,76,0.1);
+}
+.product-artisan {
+  font-family: 'Manrope', serif; font-size: 7.5px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--text-cream);
+}
+.product-details-link {
+  font-family: 'Manrope', serif; font-size: 13px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--gold); text-decoration: none;
+  transition: color 0.3s;
+}
+.product-details-link:hover { color: var(--gold-light); }
+
+/* ═════════ COMMISSION INQUIRY ═════════ */
+
+.section-commission{
+  background:#310002;
+  padding:120px 80px;
+  position:relative;
+}
+
+.commission-frame{
+  position:absolute;
+  width:250px;
+  height:280px;
+  border:1px solid rgba(201,168,76,.25);
+  top:70px;
+  left:20px;
+}
+
+.commission-card{
+  background:#511413;
+  max-width:1500px;
+  margin:auto;
+  padding:90px 100px;
+  display:grid;
+  grid-template-columns:420px 1fr;
+  gap:80px;
+  position:relative;
+  z-index:2;
+}
+
+.commission-left h2{
+  font-family:'Noto Serif', serif;
+  font-size:75px;
+  font-weight:400;
+  line-height:.92;
+  color:#f3e4d5;
+  margin-bottom:50px;
+}
+
+.commission-left p{
+  font-family:'Manrope', sans-serif;
+  color:rgba(244,237,214,.85);
+  font-size:18px;
+  line-height:1.8;
+  max-width:340px;
+  margin-bottom:60px;
+}
+
+.commission-features{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+
+.commission-features div{
+  color:#c9a84c;
+  font-family:'Cinzel', serif;
+  font-size:12px;
+  letter-spacing:.12em;
+}
+
+.top-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:60px;
+}
+
+.field,
+.interest-section,
+.vision-section{
+  margin-bottom:55px;
+}
+
+.field label,
+.interest-section label,
+.vision-section label{
+  display:block;
+  margin-bottom:22px;
+  color:#c9a84c;
+  font-family:'Cinzel', serif;
+  font-size:12px;
+  letter-spacing:.15em;
+}
+
+.field input,
+.vision-section textarea{
+  width:100%;
+  background:transparent;
+  border:none;
+  border-bottom:1px solid rgba(255,255,255,.25);
+  color:#f4edd6;
+  font-size:18px;
+  padding-bottom:15px;
+  font-family:'Manrope', sans-serif;
+}
+
+.field input::placeholder,
+.vision-section textarea::placeholder{
+  color:rgba(255,255,255,.22);
+}
+
+.field input:focus,
+.vision-section textarea:focus{
+  outline:none;
+  border-bottom-color:#c9a84c;
+}
+
+.checkboxes{
+  display:flex;
+  gap:45px;
+  margin-top:8px;
+}
+
+.check-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  cursor:pointer;
+  color:#f4edd6;
+  font-family:'Manrope', sans-serif;
+}
+
+.check-item input{
+  appearance:none;
+  width:12px;
+  height:12px;
+  border:1px solid #c9a84c;
+  background:transparent;
+}
+
+.check-item input:checked{
+  background:#c9a84c;
+}
+
+.vision-section textarea{
+  resize:none;
+  min-height:120px;
+}
+
+.commission-btn{
+  background:#c9a84c;
+  color:#310002;
+  border:none;
+  padding:18px 42px;
+  font-family:'Cinzel', serif;
+  letter-spacing:.18em;
+  font-size:11px;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.commission-btn:hover{
+  background:#e2c97e;
+}
+
+@media(max-width:1000px){
+
+  .commission-card{
+    grid-template-columns:1fr;
+    padding:60px 40px;
+  }
+
+  .commission-left h2{
+    font-size:58px;
+  }
+
+  .top-row{
+    grid-template-columns:1fr;
+    gap:30px;
+  }
+
+  .checkboxes{
+    flex-wrap:wrap;
+  }
+}
+
+/* ════════ FOOTER ════════ */
+footer {
+  background: #3D0506;
+  border-top: 1px solid rgba(201,168,76,0.13);
+  padding: 36px 60px 28px;
+}
+.footer-main {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  align-items: center; margin-bottom: 0; padding-bottom: 28px;
+}
+.footer-logo-block img { height: 28px; display: block; }
+.footer-logo-tagline {
+  font-family: 'Manrope', sans-serif; font-size: 9px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: #D7C3B0; opacity: 0.65; margin-top: 8px;
+}
+.footer-nav { display: flex; gap: 40px; list-style: none; justify-content: center; }
+.footer-nav a {
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: #D7C3B0; text-decoration: none; transition: color 0.3s;
+}
+.footer-nav a:hover { color: var(--gold); }
+.footer-copy-right {
+  font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.14em;
+  color: #D7C3B0; text-align: right; text-transform: uppercase;
+}
+.footer-bottom-tagline {
+  text-align: center; font-family: 'Manrope', sans-serif; font-size: 10px;
+  letter-spacing: 0.45em; text-transform: uppercase; color: #D7C3B0;
+  padding-top: 20px; border-top: 1px solid rgba(201,168,76,0.08);
+}
+
+/* ════════ RESPONSIVENESS ════════ */
+@media (max-width: 1024px) {
+  nav { padding: 0 30px; }
+  .nav-center { gap: 24px; }
+  .section-collection, .section-commission { padding: 80px 40px 80px; }
+  .commission-container { grid-template-columns: 1fr 1fr; gap: 40px; }
+  footer { padding: 36px 40px 28px; }
+}
+
+@media (max-width: 768px) {
+  .nav-hamburger { display: flex; }
+  nav { padding: 0 20px; }
+  .nav-center { display: none; }
+  .hero-content { padding: 0 24px; }
+  .hero-title { font-size: clamp(42px, 12vw, 72px); }
+  .section-collection, .section-commission { padding: 60px 28px 60px; }
+  .commission-container { grid-template-columns: 1fr; gap: 40px; }
+  .product-grid { grid-template-columns: 1fr; gap: 48px; max-width: 400px; margin: 0 auto; }
+  footer { padding: 36px 24px 28px; }
+  .footer-main { grid-template-columns: 1fr; gap: 28px; text-align: center; }
+  .footer-copy-right { text-align: center; }
+  .footer-nav { flex-wrap: wrap; gap: 20px; }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 48px; letter-spacing: 0.03em; }
+  .collection-heading { font-size: 38px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════ PAGE VEIL ════ -->
+<div id="page-veil"><span class="veil-logo">Nagada</span></div>
+
+<!-- ════ CUSTOM CURSOR ════ -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- ════ NAV ════ -->
+<nav>
+  <div class="nav-logo">
+    <img src="img/Group.png" alt="NAGADA" id="navLogo">
+  </div>
+  <ul class="nav-center">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="craftsmanship.html">Craftsmanship</a></li>
+    <li><a href="collections.html">Collections</a></li>
+    <li><a href="stories2.html">Stories</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <div class="nav-icons">
+    <svg id="navIcon1" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5l4 4" stroke-linecap="round"/></svg>
+    <svg id="navIcon2" viewBox="0 0 24 24" fill="var(--text-muted)" stroke="none"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></svg>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu"><span></span><span></span></button>
+  <a href="index.html">Home</a>
+  <a href="craftsmanship.html">Craftsmanship</a>
+  <a href="collections.html">Collections</a>
+  <a href="stories2.html">Stories</a>
+  <a href="about.html">About</a>
+</div>
+
+<!-- ════ HERO ════ -->
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">
+      <span id="heroTitle">Collections</span>
+    </h1>
+  </div>
+  <div class="hero-scroll" id="heroScroll">
+    <div class="hero-scroll-line"></div>
+    <span class="hero-scroll-label">Scroll</span>
+  </div>
+</section>
+
+<!-- ════ MARQUEE ════ -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>Artisan Collections</span><span>Heritage Textiles</span><span>Kilim Weave</span>
+    <span>Limited Edition</span><span>Nile Inspired</span><span>Master Crafted</span>
+    <span>Natural Dyes</span><span>Timeless Design</span><span>Naqada Origin</span>
+    <span>Artisan Collections</span><span>Heritage Textiles</span><span>Kilim Weave</span>
+    <span>Limited Edition</span><span>Nile Inspired</span><span>Master Crafted</span>
+    <span>Natural Dyes</span><span>Timeless Design</span><span>Naqada Origin</span>
+  </div>
+</div>
+
+<!-- ════ COLLECTION 1: FAFI ════ -->
+<section class="section-collection">
+  <div class="collection-header">
+    <p class="collection-eyebrow" id="coll1Ey">Line 01</p>
+    <h2 class="collection-heading" id="coll1H">Fafi</h2>
+    <p class="collection-desc" id="coll1D">The Farka Line:Traditional Meets Avent-Grand</p>
+  </div>
+
+  <div class="product-grid">
+    <!-- Product 1 -->
+    <div class="product-card" id="pc1c1">
+      <div class="product-img-wrap">
+        <img class="product-img" src="img/product1.png" alt="The Farka — Pure Egyptian silk">
+      </div>
+      <div class="product-body">
+        <div class="product-name-row">
+          <span class="product-name">The Farka</span>
+          <span class="product-price">$4,250</span>
+        </div>
+        <p class="product-desc">Pure Egyptian silk, hand-dyed using pomegranate rind and madder root.</p>
+        <div class="product-meta-row">
+          <span class="product-artisan">Artisan: Amali · Nagada</span>
+          <a href="#" class="product-details-link">Details</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-card" id="pc2c1">
+      <div class="product-img-wrap">
+        <img class="product-img" src="img/product2.png" alt="Indigo Geometry — Heavyweight linen blend">
+      </div>
+      <div class="product-body">
+        <div class="product-name-row">
+          <span class="product-name">Indigo Geometry</span>
+          <span class="product-price">$2,890</span>
+        </div>
+        <p class="product-desc">Heavyweight linen blend with hand-embroidered silver filaments.</p>
+        <div class="product-meta-row">
+          <span class="product-artisan">Artisan: Karim S. · Nagada</span>
+          <a href="#" class="product-details-link">Details</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="product-card" id="pc3c1">
+      <div class="product-img-wrap">
+        <img class="product-img" src="img/ColProduct3.png" alt="Golden Filament — Statement wall textile">
+      </div>
+      <div class="product-body">
+        <div class="product-name-row">
+          <span class="product-name">Golden Filament</span>
+          <span class="product-price">$2,200</span>
+        </div>
+        <p class="product-desc">A statement wall textile. The raw silk is left untreated to showcase natural variation.</p>
+        <div class="product-meta-row">
+          <span class="product-artisan">Artisan: Mariam L. · Nagada</span>
+          <a href="#" class="product-details-link">Details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ ORNAMENT STRIP ════ -->
+<div class="ornament-strip" id="ornamentStrip1">
+  <img src="img/Group9.png" alt="">
+</div>
+
+<!-- ════ COLLECTION 2: RIRI ════ -->
+<section class="section-collection">
+  <div class="collection-header">
+    <p class="collection-eyebrow" id="coll2Ey">Line 02</p>
+    <h2 class="collection-heading" id="coll2H">Riri</h2>
+    <p class="collection-desc" id="coll2D">The Double-Love Line</p>
+  </div>
+
+  <div class="product-grid">
+    <!-- Product 1 -->
+    <div class="product-card" id="pc1c2">
+      <div class="product-img-wrap">
+        <img class="product-img" src="img/ririp1.png" alt="The Farka — Pure Egyptian silk">
+      </div>
+      <div class="product-body">
+        <div class="product-name-row">
+          <span class="product-name">The Farka</span>
+          <span class="product-price">$4,250</span>
+        </div>
+        <p class="product-desc">Pure Egyptian silk, hand-dyed using pomegranate rind and madder root.</p>
+        <div class="product-meta-row">
+          <span class="product-artisan">Artisan: Amali · Nagada</span>
+          <a href="#" class="product-details-link">Details</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-card" id="pc2c2">
+      <div class="product-img-wrap">
+        <img class="product-img" src="img/ririp2.png" alt="Indigo Geometry — Heavyweight linen blend">
+      </div>
+      <div class="product-body">
+        <div class="product-name-row">
+          <span class="product-name">Indigo Geometry</span>
+          <span class="product-price">$2,890</span>
+        </div>
+        <p class="product-desc">Heavyweight linen blend with hand-embroidered silver filaments.</p>
+        <div class="product-meta-row">
+          <span class="product-artisan">Artisan: Karim S. · Nagada</span>
+          <a href="#" class="product-details-link">Details</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="product-card" id="pc3c2">
+      <div class="product-img-wrap">
+        <img class="product-img" src="img/ririp3.png" alt="Golden Filament — Statement wall textile">
+      </div>
+      <div class="product-body">
+        <div class="product-name-row">
+          <span class="product-name">Golden Filament</span>
+          <span class="product-price">$2,200</span>
+        </div>
+        <p class="product-desc">A statement wall textile. The raw silk is left untreated to showcase natural variation.</p>
+        <div class="product-meta-row">
+          <span class="product-artisan">Artisan: Mariam L. · Nagada</span>
+          <a href="#" class="product-details-link">Details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ ORNAMENT STRIP ════ -->
+<div class="ornament-strip" id="ornamentStrip2">
+  <img src="img/Group9.png" alt="">
+</div>
+
+<!-- ════ COLLECTION 3: GIGI ════ -->
+<section class="section-collection">
+  <div class="collection-header">
+    <p class="collection-eyebrow" id="coll3Ey">Line 03</p>
+    <h2 class="collection-heading" id="coll3H">Gigi</h2>
+    <p class="collection-desc" id="coll3D">The Fobram Line</p>
+  </div>
+
+  <div class="product-grid">
+    <!-- Product 1 -->
+    <div class="product-card" id="pc1c3">
+      <div class="product-img-wrap">
+        <img class="product-img" src="img/gigip1.png" alt="The Farka — Pure Egyptian silk">
+      </div>
+      <div class="product-body">
+        <div class="product-name-row">
+          <span class="product-name">The Farka</span>
+          <span class="product-price">$4,250</span>
+        </div>
+        <p class="product-desc">Pure Egyptian silk, hand-dyed using pomegranate rind and madder root.</p>
+        <div class="product-meta-row">
+          <span class="product-artisan">Artisan: Amali · Nagada</span>
+          <a href="#" class="product-details-link">Details</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-card" id="pc2c3">
+      <div class="product-img-wrap">
+        <img class="product-img" src="img/gigip2.png" alt="Indigo Geometry — Heavyweight linen blend">
+      </div>
+      <div class="product-body">
+        <div class="product-name-row">
+          <span class="product-name">Indigo Geometry</span>
+          <span class="product-price">$2,890</span>
+        </div>
+        <p class="product-desc">Heavyweight linen blend with hand-embroidered silver filaments.</p>
+        <div class="product-meta-row">
+          <span class="product-artisan">Artisan: Karim S. · Nagada</span>
+          <a href="#" class="product-details-link">Details</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="product-card" id="pc3c3">
+      <div class="product-img-wrap">
+        <img class="product-img" src="img/ColProduct3.png" alt="Golden Filament — Statement wall textile">
+      </div>
+      <div class="product-body">
+        <div class="product-name-row">
+          <span class="product-name">Golden Filament</span>
+          <span class="product-price">$2,200</span>
+        </div>
+        <p class="product-desc">A statement wall textile. The raw silk is left untreated to showcase natural variation.</p>
+        <div class="product-meta-row">
+          <span class="product-artisan">Artisan: Mariam L. · Nagada</span>
+          <a href="#" class="product-details-link">Details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ ORNAMENT STRIP ════ -->
+<div class="ornament-strip" id="ornamentStrip3">
+  <img src="img/Group9.png" alt="">
+</div>
+
+<section class="section-commission">
+  <div class="commission-frame"></div>
+
+  <div class="commission-card">
+
+    <div class="commission-left">
+      <h2>Commission<br>Inquiry</h2>
+
+      <p>
+        To begin a heritage textile journey, we invite you to share your vision.
+        Each commission is a months-long collaboration with our master weavers.
+      </p>
+
+      <div class="commission-features">
+        <div>✧ &nbsp; BESPOKE CURATION</div>
+        <div>⌛ &nbsp; 12-WEEK CRAFTING</div>
+      </div>
+    </div>
+
+    <div class="commission-right">
+
+      <form id="commissionForm">
+
+        <div class="top-row">
+          <div class="field">
+            <label>FULL IDENTITY</label>
+            <input type="text" id="commissionName" placeholder="Your Name">
+          </div>
+
+          <div class="field">
+            <label>DIGITAL ADDRESS</label>
+            <input type="email" id="commissionEmail" placeholder="Email@Archive.com">
+          </div>
+        </div>
+
+        <div class="interest-section">
+          <label>COLLECTION INTEREST</label>
+
+          <div class="checkboxes" id="commissionInterests">
+
+            <label class="check-item">
+              <input type="checkbox" class="interest-check" value="FAFI">
+              <span>FAFI</span>
+            </label>
+
+            <label class="check-item">
+              <input type="checkbox" class="interest-check" value="RIRI">
+              <span>RIRI</span>
+            </label>
+
+            <label class="check-item">
+              <input type="checkbox" class="interest-check" value="GONZII">
+              <span>GONZII</span>
+            </label>
+
+          </div>
+        </div>
+
+        <div class="vision-section">
+          <label>THE VISION</label>
+
+          <textarea
+            id="commissionMessage"
+            placeholder="Describe the occasion or aesthetic intent..."
+          ></textarea>
+        </div>
+
+        <button class="commission-btn" id="commissionBtn" type="button">
+          <span id="commissionBtnText">SUBMIT INQUIRY</span>
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ════ FOOTER ════ -->
+<footer>
+  <div class="footer-main">
+    <div class="footer-logo-block">
+      <img src="img/Group.png" alt="NAGADA">
+      <div class="footer-logo-tagline">Heritage Textiles. Artisan Crafted.</div>
+    </div>
+    <ul class="footer-nav">
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><a href="#">Artisan Credit</a></li>
+      <li><a href="#">Privacy</a></li>
+    </ul>
+    <div class="footer-copy-right">© Nagada Heritage Textiles. All Rights Reserved.</div>
+  </div>
+  <div class="footer-bottom-tagline">Crafted in Egypt. Shared with the World.</div>
+</footer>
+
+<script>
+/* ══════════════════════════════════
+   PAGE VEIL
+══════════════════════════════════ */
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('page-veil').classList.add('gone'), 300);
+});
+
+/* ══════════════════════════════════
+   CUSTOM CURSOR
+══════════════════════════════════ */
+const dot  = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  dot.style.left = mouseX + 'px';
+  dot.style.top  = mouseY + 'px';
+});
+
+(function animateRing() {
+  ringX += (mouseX - ringX) * 0.12;
+  ringY += (mouseY - ringY) * 0.12;
+  ring.style.left = ringX + 'px';
+  ring.style.top  = ringY + 'px';
+  requestAnimationFrame(animateRing);
+})();
+
+const hoverTargets = 'a, button, .product-card, .commission-image, .nav-icons svg, .commission-submit';
+document.querySelectorAll(hoverTargets).forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+});
+document.addEventListener('mousedown', () => document.body.classList.add('cursor-click'));
+document.addEventListener('mouseup',   () => document.body.classList.remove('cursor-click'));
+
+/* ══════════════════════════════════
+   NAV + HERO ENTRANCE
+══════════════════════════════════ */
+setTimeout(() => {
+  document.getElementById('navLogo').classList.add('in');
+  document.querySelectorAll('.nav-center a').forEach((a, i) =>
+    setTimeout(() => a.classList.add('in'), i * 90));
+  document.querySelectorAll('.nav-icons svg').forEach(s => s.classList.add('in'));
+}, 700);
+
+setTimeout(() => document.getElementById('heroBg').classList.add('in'),       500);
+setTimeout(() => document.getElementById('heroSubSmall').classList.add('in'), 1000);
+setTimeout(() => document.getElementById('heroTitle').classList.add('in'),    1050);
+setTimeout(() => document.getElementById('heroDesc').classList.add('in'),     1300);
+setTimeout(() => document.getElementById('heroScroll').classList.add('in'),   1700);
+
+/* ══════════════════════════════════
+   NAV MAGNETIC HOVER
+══════════════════════════════════ */
+document.querySelectorAll('.nav-center a').forEach(link => {
+  link.addEventListener('mousemove', e => {
+    const r = link.getBoundingClientRect();
+    const x = e.clientX - r.left - r.width  / 2;
+    const y = e.clientY - r.top  - r.height / 2;
+    link.style.transform = `translate(${x * 0.22}px, ${y * 0.38}px)`;
+  });
+  link.addEventListener('mouseleave', () => {
+    link.style.transform = '';
+    link.style.transition = 'transform 0.5s cubic-bezier(0.25,1,0.5,1), opacity 0.6s ease, color 0.3s';
+  });
+});
+
+/* ══════════════════════════════════
+   SCROLL REVEAL
+══════════════════════════════════ */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+
+// Collect all product cards and collection headers
+const allElements = [
+  'coll1Ey','coll1H','coll1D',
+  'pc1c1','pc2c1','pc3c1',
+  'ornamentStrip1',
+  'coll2Ey','coll2H','coll2D',
+  'pc1c2','pc2c2','pc3c2',
+  'ornamentStrip2',
+  'coll3Ey','coll3H','coll3D',
+  'pc1c3','pc2c3','pc3c3',
+  'ornamentStrip3',
+  'commissionH','commissionB','commissionForm','commissionImg'
+];
+
+allElements.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) io.observe(el);
+});
+
+/* ══════════════════════════════════
+   PRODUCT CARD HOVER
+══════════════════════════════════ */
+document.querySelectorAll('.product-card').forEach(card => {
+  const img = card.querySelector('.product-img');
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width  - 0.5;
+    const y = (e.clientY - r.top)  / r.height - 0.5;
+    img.style.transform = `scale(1.06) rotateY(${x * 7}deg) rotateX(${-y * 5}deg)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    img.style.transform = '';
+    img.style.transition = 'transform 0.7s cubic-bezier(0.25,1,0.5,1), filter 0.5s ease';
+  });
+  card.addEventListener('mouseenter', () => {
+    img.style.transition = 'transform 0.15s ease, filter 0.5s ease';
+  });
+});
+
+/* ══════════════════════════════════
+   HERO PARALLAX
+══════════════════════════════════ */
+window.addEventListener('scroll', () => {
+  const sy = window.scrollY;
+  const bg = document.getElementById('heroBg');
+  if (bg && sy < window.innerHeight)
+    bg.style.transform = `scale(1) translateY(${sy * 0.22}px)`;
+}, { passive: true });
+
+/* ══════════════════════════════════
+   COMMISSION FORM — Email.js
+══════════════════════════════════ */
+emailjs.init('f3nDDWVB-JEYSf44p');
+
+document.getElementById('commissionBtn').addEventListener('click', function() {
+  const name     = document.getElementById('commissionName').value.trim();
+  const email    = document.getElementById('commissionEmail').value.trim();
+  const message  = document.getElementById('commissionMessage').value.trim();
+  const interest = Array.from(document.querySelectorAll('.interest-check:checked'))
+                        .map(c => c.value).join(', ') || 'Not specified';
+  const btnText  = document.getElementById('commissionBtnText');
+  const btn      = document.getElementById('commissionBtn');
+
+  if (!name || !email || !message) {
+    btnText.textContent = 'Fill All Fields';
+    setTimeout(() => btnText.textContent = 'Submit Inquiry', 2000);
+    return;
+  }
+
+  btnText.textContent = 'Sending…';
+  btn.disabled = true;
+
+  emailjs.send('service_r3pvgmj', 'template_1yo4eeg', {
+    from_name:    name,
+    from_email:   email,
+    interest:     interest,
+    message:      message
+  }).then(function() {
+    btnText.textContent = 'Inquiry Sent ✓';
+    document.getElementById('commissionName').value    = '';
+    document.getElementById('commissionEmail').value   = '';
+    document.getElementById('commissionMessage').value = '';
+    document.querySelectorAll('.interest-check').forEach(c => c.checked = false);
+  }).catch(function() {
+    btnText.textContent = 'Try Again';
+    btn.disabled = false;
+  });
+});
+
+/* ══════════════════════════════════
+   MOBILE HAMBURGER MENU
+══════════════════════════════════ */
+(function() {
+  const hamburger = document.getElementById('navHamburger');
+  const menu = document.getElementById('mobileMenu');
+  const closeBtn = document.getElementById('mobileMenuClose');
+  if (!hamburger || !menu) return;
+  function openMenu() {
+    hamburger.classList.add('open');
+    menu.classList.add('open');
+    document.body.classList.add('menu-open');
+  }
+  function closeMenu() {
+    hamburger.classList.remove('open');
+    menu.classList.remove('open');
+    document.body.classList.remove('menu-open');
+  }
+  hamburger.addEventListener('click', () => {
+    menu.classList.contains('open') ? closeMenu() : openMenu();
+  });
+  if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+})();
+</script>
+</body>
+</html>
